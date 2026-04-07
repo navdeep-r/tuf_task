@@ -2,9 +2,9 @@
 // Shared Types for the Editorial Calendar
 // ─────────────────────────────────────────────
 
-/** A date range with start and optional end. */
+/** A date range with optional start and end. */
 export interface DateRange {
-  start: Date;
+  start: Date | null;
   end: Date | null;
 }
 

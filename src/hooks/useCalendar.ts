@@ -43,7 +43,7 @@ export function useCalendar() {
 
   // ── Date range selection ──────────────────
   const [selectedRange, setSelectedRange] = useState<DateRange>({
-    start: new Date(),
+    start: null,
     end: null,
   });
 
@@ -100,21 +100,24 @@ export function useCalendar() {
   const selectDate = useCallback(
     (date: Date) => {
       if (!selectedRange.start || (selectedRange.start && selectedRange.end)) {
-        // Start a new selection
+        // No selection or both ends set → start fresh
         setSelectedRange({ start: date, end: null });
       } else if (date < selectedRange.start) {
-        // If the new click is before the start, swap
+        // Clicked before start → swap so start is always earlier
         setSelectedRange({ start: date, end: selectedRange.start });
+      } else if (date.getTime() === selectedRange.start.getTime()) {
+        // Clicked same date → deselect
+        setSelectedRange({ start: null, end: null });
       } else {
         // Complete the range
-        setSelectedRange({ ...selectedRange, end: date });
+        setSelectedRange({ start: selectedRange.start, end: date });
       }
     },
     [selectedRange]
   );
 
   const clearSelection = useCallback(() => {
-    setSelectedRange({ start: new Date(), end: null });
+    setSelectedRange({ start: null, end: null });
   }, []);
 
   // ── Notes CRUD ────────────────────────────

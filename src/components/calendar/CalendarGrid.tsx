@@ -76,12 +76,15 @@ export function CalendarGrid({
     [selectedRange, hoveredDate]
   );
 
-  // ── Handle day click — single click opens radial ─
+  // ── Handle day click — select for range AND open radial ─
   const handleDayClick = useCallback(
     (date: Date) => {
+      // 1) Perform range selection
+      onDayClick(date);
+      // 2) Open radial menu for additional actions
       onDayAction(date);
     },
-    [onDayAction]
+    [onDayClick, onDayAction]
   );
 
   const handleMouseEnter = useCallback((date: Date) => {

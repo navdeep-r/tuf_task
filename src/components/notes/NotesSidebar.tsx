@@ -37,7 +37,7 @@ export function NotesSidebar({
     filter === "all"
       ? notes
       : notes.filter((n) => {
-          if (!n.dateRange || !selectedRange.start || !selectedRange.end) return false;
+          if (!n.dateRange || !n.dateRange.start || !selectedRange.start || !selectedRange.end) return false;
           return (
             n.dateRange.start >= selectedRange.start &&
             (n.dateRange.end ? n.dateRange.end <= selectedRange.end : true)
