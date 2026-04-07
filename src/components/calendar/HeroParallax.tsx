@@ -1,99 +1,120 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useCallback } from "react";
 import * as THREE from "three";
-import gsap from "gsap";
+import { extractDominantColor } from "@/lib/colorExtractor";
+
+// ─────────────────────────────────────────────
+// HeroParallax — Three.js parallax hero image
+// Uses a perspective camera to create a subtle
+// drift effect based on mouse (Desktop) or
+// scroll (Mobile) position.
+// ─────────────────────────────────────────────
 
 interface HeroParallaxProps {
+  /** Path to the hero image. */
   imageSrc: string;
+  /** Callback with extracted dominant color from the image. */
+  onColorExtracted?: (color: string) => void;
 }
 
-export function HeroParallax({ imageSrc }: HeroParallaxProps) {
+export function HeroParallax({ imageSrc, onColorExtracted }: HeroParallaxProps) {
   const mountRef = useRef<HTMLDivElement>(null);
+  const cleanupRef = useRef<(() => void) | null>(null);
+
+  const handleColorExtraction = useCallback(
+    (src: string) => {
+      if (!onColorExtracted) return;
+      extractDominantColor(src).then(onColorExtracted);
+    },
+    [onColorExtracted]
+  );
 
   useEffect(() => {
-    if (!mountRef.current) return;
+    const container = mountRef.current;
+    if (!container) return;
 
-    let width = mountRef.current.clientWidth;
-    let height = mountRef.current.clientHeight;
+    let width = container.clientWidth;
+    let height = container.clientHeight;
 
+    // ── Scene setup ─────────────────────────
     const scene = new THREE.Scene();
-    
-    // Orthographic or Perspective. Parallax often uses Perspective.
     const camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 1000);
     camera.position.z = 5;
 
     const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
     renderer.setSize(width, height);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-    mountRef.current.appendChild(renderer.domElement);
+    container.appendChild(renderer.domElement);
 
-    const useMobileScroll = window.innerWidth <= 768;
+    const isMobile = window.innerWidth <= 768;
 
+    // ── Load texture ────────────────────────
     const textureLoader = new THREE.TextureLoader();
+    let animationId: number;
+
     textureLoader.load(imageSrc, (texture) => {
-      // Create a plane that covers the camera view
       const geometry = new THREE.PlaneGeometry(16, 9);
       const material = new THREE.MeshBasicMaterial({ map: texture });
       const plane = new THREE.Mesh(geometry, material);
-      
-      // Scale plane up slightly to hide edges during parallax
-      plane.scale.set(1.1, 1.1, 1.1);
+
+      // Scale up slightly to hide edges during parallax
+      plane.scale.set(1.15, 1.15, 1.15);
       scene.add(plane);
 
-      let mouse = { x: 0, y: 0 };
-      let targetMouse = { x: 0, y: 0 };
+      // Extract color from the image
+      handleColorExtraction(imageSrc);
+
+      // ── Parallax tracking ───────────────
+      const mouse = { x: 0, y: 0 };
+      const targetMouse = { x: 0, y: 0 };
 
       const onMouseMove = (event: MouseEvent) => {
-        // Normalize mouse to -1 to 1
         targetMouse.x = (event.clientX / window.innerWidth) * 2 - 1;
         targetMouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
       };
 
       const onScroll = () => {
-        // Simple scroll parallax for mobile
-        const scrollY = window.scrollY;
-        targetMouse.y = scrollY * 0.002;
+        targetMouse.y = window.scrollY * 0.002;
       };
 
-      if (useMobileScroll) {
-        window.addEventListener("scroll", onScroll);
+      if (isMobile) {
+        window.addEventListener("scroll", onScroll, { passive: true });
       } else {
         window.addEventListener("mousemove", onMouseMove);
       }
 
+      // ── Render loop ─────────────────────
       const tick = () => {
-        // Smoothly interpolate current mouse to target
         mouse.x += (targetMouse.x - mouse.x) * 0.05;
         mouse.y += (targetMouse.y - mouse.y) * 0.05;
 
-        // Apply to camera position
-        camera.position.x = mouse.x * 0.5;
-        camera.position.y = mouse.y * 0.5;
-        camera.lookAt(new THREE.Vector3(0,0,0));
+        camera.position.x = mouse.x * 0.4;
+        camera.position.y = mouse.y * 0.3;
+        camera.lookAt(new THREE.Vector3(0, 0, 0));
 
         renderer.render(scene, camera);
         animationId = requestAnimationFrame(tick);
       };
-      
-      let animationId = requestAnimationFrame(tick);
-      
-      // Handle resize
+
+      animationId = requestAnimationFrame(tick);
+
+      // ── Handle resize ───────────────────
       const onResize = () => {
-        if (!mountRef.current) return;
-        width = mountRef.current.clientWidth;
-        height = mountRef.current.clientHeight;
+        if (!container) return;
+        width = container.clientWidth;
+        height = container.clientHeight;
         renderer.setSize(width, height);
         camera.aspect = width / height;
         camera.updateProjectionMatrix();
       };
       window.addEventListener("resize", onResize);
 
-      // Cleanup function strictly appended to the element's cleanup
-      (mountRef.current as any)._cleanup = () => {
+      // ── Register cleanup ────────────────
+      cleanupRef.current = () => {
         cancelAnimationFrame(animationId);
         window.removeEventListener("resize", onResize);
-        if (useMobileScroll) {
+        if (isMobile) {
           window.removeEventListener("scroll", onScroll);
         } else {
           window.removeEventListener("mousemove", onMouseMove);
@@ -106,22 +127,19 @@ export function HeroParallax({ imageSrc }: HeroParallaxProps) {
     });
 
     return () => {
-      // Disposing three.js logic
-      if (mountRef.current) {
-        const cleanup = (mountRef.current as any)._cleanup;
-        if (cleanup) cleanup();
-        if (renderer.domElement.parentNode === mountRef.current) {
-          mountRef.current.removeChild(renderer.domElement);
-        }
+      if (cleanupRef.current) cleanupRef.current();
+      if (renderer.domElement.parentNode === container) {
+        container.removeChild(renderer.domElement);
       }
     };
-  }, [imageSrc]);
+  }, [imageSrc, handleColorExtraction]);
 
   return (
-    <div 
-      ref={mountRef} 
-      className="w-full relative overflow-hidden bg-black/10"
+    <div
+      ref={mountRef}
+      className="w-full relative overflow-hidden rounded-t-lg bg-[var(--paper-bg-dark)]"
       style={{ aspectRatio: "16/9" }}
+      aria-hidden="true"
     />
   );
 }
