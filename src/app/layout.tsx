@@ -56,7 +56,7 @@ export default function RootLayout({
         {/* Inline SVG noise filter — referenced by .paper-texture via filter: url(#paper-noise) */}
         <svg className="absolute w-0 h-0" aria-hidden="true">
           <defs>
-            <filter id="paper-noise">
+            <filter id="paper-noise" x="0" y="0" width="100%" height="100%">
               <feTurbulence
                 type="fractalNoise"
                 baseFrequency="0.65"
