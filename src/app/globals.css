@@ -1,26 +1,253 @@
 @import "tailwindcss";
 
+/* ─────────────────────────────────────────────
+   Design Tokens
+   ───────────────────────────────────────────── */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Accent — dynamically overridden by JS color extraction */
+  --accent-color: #8B6F47;
+  --accent-color-light: #C4A87240;
+  --accent-color-10: rgba(139, 111, 71, 0.10);
+  --accent-color-20: rgba(139, 111, 71, 0.20);
+
+  /* Paper */
+  --paper-bg: #F5F0E8;
+  --paper-bg-dark: #EDE7DB;
+  --paper-shadow: rgba(0, 0, 0, 0.08);
+  --paper-border: rgba(0, 0, 0, 0.06);
+
+  /* Typography */
+  --text-primary: #1A1612;
+  --text-secondary: #5C5347;
+  --text-muted: #9C9184;
+  --text-inverse: #F5F0E8;
+
+  /* Ruled paper lines */
+  --ruled-line: rgba(139, 111, 71, 0.12);
+  --ruled-margin: rgba(200, 80, 80, 0.25);
+
+  /* Layout */
+  --max-width: 1200px;
+  --sidebar-width: 320px;
+
+  /* Background */
+  --background: #E8E0D4;
+  --foreground: #1A1612;
 }
 
+/* ─────────────────────────────────────────────
+   Tailwind v4 Theme Extension
+   ───────────────────────────────────────────── */
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-paper: var(--paper-bg);
+  --color-paper-dark: var(--paper-bg-dark);
+  --color-accent: var(--accent-color);
+  --color-accent-light: var(--accent-color-light);
+  --font-serif: var(--font-instrument-serif);
+  --font-sans: var(--font-inter);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* ─────────────────────────────────────────────
+   SVG Noise Filter (inline, referenced in CSS)
+   ───────────────────────────────────────────── */
+
+/* We define the noise filter in the layout.tsx as an inline SVG.
+   Components reference it via: filter: url(#paper-noise);
+   This comment is a breadcrumb for that pattern.                */
+
+/* ─────────────────────────────────────────────
+   Base Styles
+   ───────────────────────────────────────────── */
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-inter), 'Inter', system-ui, sans-serif;
+  min-height: 100vh;
+}
+
+/* ─────────────────────────────────────────────
+   Paper Texture Mixin (applied via class)
+   ───────────────────────────────────────────── */
+.paper-texture {
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.06) 0%, transparent 40%, rgba(0,0,0,0.02) 100%),
+    var(--paper-bg);
+  filter: url(#paper-noise);
+  position: relative;
+}
+
+.paper-texture::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at 30% 0%, rgba(255,255,255,0.15) 0%, transparent 60%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ─────────────────────────────────────────────
+   Ruled Paper Background (for Notes)
+   ───────────────────────────────────────────── */
+.ruled-paper {
+  background-image:
+    linear-gradient(var(--ruled-line) 1px, transparent 1px);
+  background-size: 100% 28px;
+  background-position: 0 12px;
+  position: relative;
+}
+
+.ruled-paper::before {
+  content: '';
+  position: absolute;
+  left: 40px;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: var(--ruled-margin);
+  z-index: 1;
+}
+
+/* ─────────────────────────────────────────────
+   Keyframe Animations
+   ───────────────────────────────────────────── */
+
+/* Hero drops in from above */
+@keyframes dropIn {
+  from {
+    opacity: 0;
+    transform: translateY(-40px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Grid unfurls vertically like a page release */
+@keyframes unfurl {
+  from {
+    opacity: 0;
+    transform: scaleY(0);
+    transform-origin: top center;
+  }
+  to {
+    opacity: 1;
+    transform: scaleY(1);
+    transform-origin: top center;
+  }
+}
+
+/* Generic fade + scale for radial menu items */
+@keyframes fadeScale {
+  from {
+    opacity: 0;
+    transform: scale(0.3);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Spiral ring scale-in */
+@keyframes ringIn {
+  from {
+    opacity: 0;
+    transform: scaleY(0) rotate(2deg);
+  }
+  to {
+    opacity: 1;
+    transform: scaleY(1) rotate(0deg);
+  }
+}
+
+/* Page flip out — current month */
+@keyframes pageFlipOut {
+  from {
+    transform: rotateX(0deg);
+    opacity: 1;
+  }
+  to {
+    transform: rotateX(-90deg);
+    opacity: 0;
+  }
+}
+
+/* Page flip in — new month */
+@keyframes pageFlipIn {
+  from {
+    transform: rotateX(90deg);
+    opacity: 0;
+  }
+  to {
+    transform: rotateX(0deg);
+    opacity: 1;
+  }
+}
+
+/* ─────────────────────────────────────────────
+   Utility Classes
+   ───────────────────────────────────────────── */
+
+/* Multi-layer shadow for the calendar card */
+.calendar-shadow {
+  box-shadow:
+    0 1px 2px var(--paper-shadow),
+    0 4px 8px var(--paper-shadow),
+    0 12px 24px rgba(0, 0, 0, 0.06),
+    0 24px 48px rgba(0, 0, 0, 0.04);
+}
+
+/* Preserve-3D wrapper for page flip */
+.perspective-container {
+  perspective: 1200px;
+  transform-style: preserve-3d;
+}
+
+/* Day cell hover lift */
+.day-lift {
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.day-lift:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+/* Blur overlay for radial menu background */
+.blur-overlay {
+  backdrop-filter: blur(4px);
+  background: rgba(245, 240, 232, 0.5);
+  transition: all 0.3s ease;
+}
+
+/* Scrollbar styling */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: var(--accent-color-20);
+  border-radius: 3px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: var(--accent-color);
 }
