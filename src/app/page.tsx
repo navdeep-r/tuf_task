@@ -11,11 +11,11 @@ export default function Home() {
     <main className="relative flex-1 min-h-screen">
       {/* Subtle Blissful Background Image */}
       <div 
-        className="absolute inset-0 z-0 bg-cover bg-center bg-no-repeat opacity-40"
+        className="absolute inset-0 z-0 bg-cover bg-center bg-no-repeat opacity-80"
         style={{ backgroundImage: "url('/bg-landscape.png')" }}
       />
-      {/* Background washing overlay to keep the calendar popping and readable */}
-      <div className="absolute inset-0 z-0 bg-white/30 backdrop-blur-[60px]" />
+      {/* Background washing overlay to keep the calendar reading well without destroying the image */}
+      <div className="absolute inset-0 z-0 bg-[var(--background)]/20 backdrop-blur-md" />
       
       {/* Content wrapper */}
       <div className="relative z-10 w-full h-full">

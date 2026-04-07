@@ -138,7 +138,7 @@ export function HeroParallax({ imageSrc, onColorExtracted }: HeroParallaxProps) 
     <div
       ref={mountRef}
       className="w-full relative overflow-hidden rounded-t-lg bg-[var(--paper-bg-dark)]"
-      style={{ aspectRatio: "16/9" }}
+      style={{ aspectRatio: "20/9" }}
       aria-hidden="true"
     />
   );

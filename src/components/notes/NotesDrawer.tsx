@@ -87,8 +87,8 @@ export function NotesDrawer({
   return (
     <motion.div
       className="lg:hidden fixed bottom-0 left-0 right-0 z-30
-                 rounded-t-3xl bg-[var(--paper-bg)]/80 backdrop-blur-3xl shadow-[0_-8px_32px_rgba(0,0,0,0.08)]
-                 border-t border-white/40 flex flex-col overflow-hidden"
+                 rounded-t-2xl bg-[var(--paper-bg)] calendar-shadow
+                 flex flex-col overflow-hidden"
       animate={{ height: SNAP_HEIGHTS[snap] }}
       transition={{ type: "spring", damping: 30, stiffness: 300 }}
       id="notes-drawer"
@@ -113,7 +113,7 @@ export function NotesDrawer({
       </motion.div>
 
       {/* Header */}
-      <div className="flex items-center justify-between px-6 pb-4">
+      <div className="flex items-center justify-between px-5 pb-3 border-b border-[var(--paper-border)]">
         <div className="flex items-center gap-2">
           <StickyNote size={14} className="text-[var(--accent-color)]" strokeWidth={1.5} />
           <h3
@@ -132,14 +132,13 @@ export function NotesDrawer({
       {snap !== "collapsed" && (
         <>
           {/* Notes list */}
-          <div className="flex-1 overflow-y-auto custom-scrollbar linen-texture py-2 relative">
-            <div className="absolute inset-0 bg-gradient-to-b from-[var(--paper-bg)]/40 to-transparent pointer-events-none h-8 z-10" />
+          <div className="flex-1 overflow-y-auto custom-scrollbar ruled-paper">
             <AnimatePresence>
               {notes.length === 0 ? (
                 <motion.p
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
-                  className="text-center text-[var(--text-muted)] text-xs py-8 px-4"
+                  className="text-center text-[var(--text-muted)] text-xs py-8 px-4 pl-12"
                 >
                   No notes yet. Add one below.
                 </motion.p>
@@ -154,19 +153,17 @@ export function NotesDrawer({
           {/* Add note form */}
           <form
             onSubmit={handleSubmit}
-            className="p-5 pt-3 space-y-3 bg-gradient-to-t from-[var(--paper-bg)]/80 to-transparent"
+            className="border-t border-[var(--paper-border)] p-4 space-y-2"
           >
             <textarea
               value={text}
               onChange={(e) => setText(e.target.value)}
               placeholder="Write a note..."
               rows={2}
-              className="w-full resize-none text-[13px] md:text-sm bg-white/50 backdrop-blur-sm
-                         border border-white/50 shadow-inner
-                         rounded-xl px-4 py-3 text-[var(--text-primary)]
+              className="w-full resize-none text-sm bg-transparent border border-[var(--paper-border)]
+                         rounded-lg px-3 py-2 text-[var(--text-primary)]
                          placeholder:text-[var(--text-muted)]
-                         focus:outline-none focus:bg-white/80 focus:ring-1 focus:ring-[var(--accent-color)]/30
-                         transition-all duration-200"
+                         focus:outline-none focus:ring-1 focus:ring-[var(--accent-color)]"
               id="drawer-note-textarea"
             />
             <div className="flex items-center justify-between">

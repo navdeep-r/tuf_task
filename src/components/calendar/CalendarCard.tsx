@@ -51,7 +51,7 @@ export function CalendarCard({
   const monthKey = format(currentMonth, "yyyy-MM");
 
   return (
-    <div className="w-full max-w-[540px] mx-auto">
+    <div className="w-full max-w-[700px] mx-auto">
       {/* Hero image with parallax */}
       <motion.div variants={heroVariants}>
         <HeroParallax

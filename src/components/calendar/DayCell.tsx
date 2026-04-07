@@ -48,7 +48,7 @@ export const DayCell = memo(function DayCell({
       className={cn(
         // Base styles — 44px min hit target for mobile
         "relative flex flex-col items-center justify-center",
-        "min-h-[44px] min-w-[44px] h-12 md:h-14",
+        "min-h-[44px] min-w-[44px] h-11 md:h-12",
         "rounded-lg text-sm md:text-base font-medium",
         "transition-colors duration-150 cursor-pointer select-none",
         "day-lift",

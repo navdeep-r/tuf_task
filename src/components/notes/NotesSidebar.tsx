@@ -67,12 +67,12 @@ export function NotesSidebar({
     <motion.aside
       variants={sidebarVariants}
       className="hidden lg:flex flex-col w-[var(--sidebar-width)] min-h-[500px]
-                 rounded-2xl overflow-hidden shadow-[0_8px_32px_rgba(0,0,0,0.04)]
-                 bg-[var(--paper-bg)]/70 backdrop-blur-2xl border border-white/40"
+                 rounded-xl overflow-hidden calendar-shadow
+                 bg-[var(--paper-bg)]"
       id="notes-sidebar"
     >
       {/* Header */}
-      <div className="flex items-center justify-between px-6 py-5">
+      <div className="flex items-center justify-between px-5 py-4 border-b border-[var(--paper-border)]">
         <div className="flex items-center gap-2">
           <StickyNote size={16} className="text-[var(--accent-color)]" strokeWidth={1.5} />
           <h3
@@ -112,8 +112,7 @@ export function NotesSidebar({
       </div>
 
       {/* Notes list */}
-      <div className="flex-1 overflow-y-auto custom-scrollbar linen-texture py-2 relative">
-        <div className="absolute inset-0 bg-gradient-to-b from-[var(--paper-bg)]/40 to-transparent pointer-events-none h-8 z-10" />
+      <div className="flex-1 overflow-y-auto custom-scrollbar ruled-paper">
         <AnimatePresence>
           {filteredNotes.length === 0 ? (
             <motion.p
@@ -136,19 +135,18 @@ export function NotesSidebar({
       {/* Add note form */}
       <form
         onSubmit={handleSubmit}
-        className="p-5 pt-3 space-y-3 bg-gradient-to-t from-[var(--paper-bg)]/80 to-transparent"
+        className="border-t border-[var(--paper-border)] p-4 space-y-2"
       >
         <textarea
           value={text}
           onChange={(e) => setText(e.target.value)}
           placeholder="Write a note..."
           rows={2}
-          className="w-full resize-none text-[13px] md:text-sm bg-white/50 backdrop-blur-sm
-                     border border-white/50 shadow-inner
-                     rounded-xl px-4 py-3 text-[var(--text-primary)]
+          className="w-full resize-none text-sm bg-transparent border border-[var(--paper-border)]
+                     rounded-lg px-3 py-2 text-[var(--text-primary)]
                      placeholder:text-[var(--text-muted)]
-                     focus:outline-none focus:bg-white/80 focus:ring-1 focus:ring-[var(--accent-color)]/30
-                     transition-all duration-200"
+                     focus:outline-none focus:ring-1 focus:ring-[var(--accent-color)]
+                     transition-shadow duration-150"
           id="note-textarea"
         />
         <div className="flex items-center justify-between">
