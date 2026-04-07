@@ -8,8 +8,19 @@ import { CalendarApp } from "@/components/CalendarApp";
 
 export default function Home() {
   return (
-    <main className="flex-1">
-      <CalendarApp />
+    <main className="relative flex-1 min-h-screen">
+      {/* Subtle Blissful Background Image */}
+      <div 
+        className="absolute inset-0 z-0 bg-cover bg-center bg-no-repeat opacity-40"
+        style={{ backgroundImage: "url('/bg-landscape.png')" }}
+      />
+      {/* Background washing overlay to keep the calendar popping and readable */}
+      <div className="absolute inset-0 z-0 bg-white/30 backdrop-blur-[60px]" />
+      
+      {/* Content wrapper */}
+      <div className="relative z-10 w-full h-full">
+        <CalendarApp />
+      </div>
     </main>
   );
 }

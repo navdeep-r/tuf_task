@@ -193,10 +193,12 @@ export function CalendarApp() {
                 onChange={(e) => setNoteInputText(e.target.value)}
                 placeholder="Write your note..."
                 rows={3}
-                className="w-full resize-none text-sm bg-transparent border border-[var(--paper-border)]
-                           rounded-lg px-3 py-2 text-[var(--text-primary)]
+                className="w-full resize-none text-[13px] md:text-sm bg-white/50 backdrop-blur-sm
+                           border border-white/50 shadow-inner
+                           rounded-xl px-4 py-3 text-[var(--text-primary)]
                            placeholder:text-[var(--text-muted)]
-                           focus:outline-none focus:ring-1 focus:ring-[var(--accent-color)]"
+                           focus:outline-none focus:bg-white/80 focus:ring-1 focus:ring-[var(--accent-color)]/30
+                           transition-all duration-200"
                 id="inline-note-textarea"
               />
               <div className="flex gap-2 justify-end">

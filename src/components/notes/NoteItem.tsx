@@ -28,17 +28,23 @@ export function NoteItem({ note, onDelete }: NoteItemProps) {
       ? format(note.date, "MMM d")
       : null;
 
+  // Stable pseudo-random rotation based on the note ID
+  const hash = note.id.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
+  const rotationClass = hash % 2 === 0 ? '-rotate-1' : 'rotate-1';
+
   return (
     <motion.div
       layout
-      initial={{ opacity: 0, y: 8 }}
+      initial={{ opacity: 0, y: 8, rotate: 0 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, x: -20 }}
       transition={{ duration: 0.25 }}
-      className="group relative px-5 py-3 pl-12 border-b border-[var(--ruled-line)]"
+      className={`group relative mx-4 mb-3 p-3.5 pl-4 
+                  bg-white/60 backdrop-blur-md rounded-xl shadow-sm border border-white/40
+                  ${rotationClass} hover:rotate-0 transition-transform duration-300`}
     >
       {/* Note text */}
-      <p className="text-sm text-[var(--text-primary)] leading-relaxed whitespace-pre-wrap">
+      <p className="text-[13px] md:text-sm text-[var(--text-primary)] leading-relaxed whitespace-pre-wrap">
         {note.text}
       </p>
 

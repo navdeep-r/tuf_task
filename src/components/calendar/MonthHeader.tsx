@@ -47,7 +47,7 @@ export function MonthHeader({ currentMonth, onPrev, onNext }: MonthHeaderProps) 
         className="text-center select-none"
       >
         <h2
-          className="text-3xl md:text-4xl font-normal tracking-wide text-[var(--text-primary)]"
+          className="text-4xl md:text-5xl lg:text-6xl font-normal tracking-wide text-[var(--text-primary)]"
           style={{ fontFamily: "var(--font-instrument-serif), 'Georgia', serif" }}
         >
           {monthName}
