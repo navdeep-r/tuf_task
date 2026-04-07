@@ -1,7 +1,7 @@
 "use client";
 
 import { ReactNode } from "react";
-import { motion } from "framer-motion";
+import { motion, type Variants } from "framer-motion";
 
 // ─────────────────────────────────────────────
 // MountAnimation — Staggered entry orchestrator
@@ -13,7 +13,9 @@ interface MountAnimationProps {
   children: ReactNode;
 }
 
-const containerVariants = {
+const EASE: [number, number, number, number] = [0.22, 1, 0.36, 1];
+
+const containerVariants: Variants = {
   hidden: { opacity: 0 },
   visible: {
     opacity: 1,
@@ -25,7 +27,7 @@ const containerVariants = {
 };
 
 /** Hero image — drops from above */
-export const heroVariants = {
+export const heroVariants: Variants = {
   hidden: {
     opacity: 0,
     y: -40,
@@ -37,13 +39,13 @@ export const heroVariants = {
     scale: 1,
     transition: {
       duration: 0.6,
-      ease: [0.22, 1, 0.36, 1],
+      ease: EASE,
     },
   },
 };
 
 /** Binder section — fades in after hero */
-export const binderVariants = {
+export const binderVariants: Variants = {
   hidden: {
     opacity: 0,
     scaleX: 0.8,
@@ -53,13 +55,13 @@ export const binderVariants = {
     scaleX: 1,
     transition: {
       duration: 0.4,
-      ease: [0.22, 1, 0.36, 1],
+      ease: EASE,
     },
   },
 };
 
 /** Grid — unfurls vertically like a released page */
-export const gridVariants = {
+export const gridVariants: Variants = {
   hidden: {
     opacity: 0,
     scaleY: 0,
@@ -71,13 +73,13 @@ export const gridVariants = {
     transformOrigin: "top center",
     transition: {
       duration: 0.5,
-      ease: [0.22, 1, 0.36, 1],
+      ease: EASE,
     },
   },
 };
 
 /** Sidebar / drawer — slides in from the side */
-export const sidebarVariants = {
+export const sidebarVariants: Variants = {
   hidden: {
     opacity: 0,
     x: 40,
@@ -88,7 +90,7 @@ export const sidebarVariants = {
     transition: {
       duration: 0.5,
       delay: 0.8,
-      ease: [0.22, 1, 0.36, 1],
+      ease: EASE,
     },
   },
 };

@@ -39,6 +39,7 @@ const ORBIT_ANGLES = [
   Math.PI / 2,      // bottom
   Math.PI,           // left
 ];
+const EASE: [number, number, number, number] = [0.22, 1, 0.36, 1];
 
 export function RadialMenu({
   anchorDate,
@@ -103,7 +104,7 @@ export function RadialMenu({
               initial={{ scale: 0 }}
               animate={{ scale: 1 }}
               exit={{ scale: 0 }}
-              transition={{ duration: 0.2, ease: [0.22, 1, 0.36, 1] }}
+              transition={{ duration: 0.2, ease: EASE }}
               className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2
                          w-3 h-3 rounded-full bg-[var(--accent-color)]"
             />
@@ -138,7 +139,7 @@ export function RadialMenu({
                   transition={{
                     delay: i * 0.06,
                     duration: 0.35,
-                    ease: [0.22, 1, 0.36, 1],
+                    ease: EASE,
                   }}
                   className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2
                              flex items-center justify-center

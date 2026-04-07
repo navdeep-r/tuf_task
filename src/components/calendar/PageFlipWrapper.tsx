@@ -1,7 +1,7 @@
 "use client";
 
 import { ReactNode } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, type Variants } from "framer-motion";
 
 // ─────────────────────────────────────────────
 // PageFlipWrapper — 3D page flip transition
@@ -16,7 +16,10 @@ interface PageFlipWrapperProps {
   children: ReactNode;
 }
 
-const flipVariants = {
+const EASE_IN: [number, number, number, number] = [0.22, 1, 0.36, 1];
+const EASE_OUT: [number, number, number, number] = [0.55, 0, 1, 0.45];
+
+const flipVariants: Variants = {
   initial: {
     rotateX: 90,
     opacity: 0,
@@ -28,7 +31,7 @@ const flipVariants = {
     transformOrigin: "center top",
     transition: {
       duration: 0.45,
-      ease: [0.22, 1, 0.36, 1],
+      ease: EASE_IN,
     },
   },
   exit: {
@@ -37,7 +40,7 @@ const flipVariants = {
     transformOrigin: "center top",
     transition: {
       duration: 0.3,
-      ease: [0.55, 0, 1, 0.45],
+      ease: EASE_OUT,
     },
   },
 };

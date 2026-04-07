@@ -16,6 +16,8 @@ interface MonthHeaderProps {
   onNext: () => void;
 }
 
+const EASE: [number, number, number, number] = [0.22, 1, 0.36, 1];
+
 export function MonthHeader({ currentMonth, onPrev, onNext }: MonthHeaderProps) {
   const monthName = format(currentMonth, "MMMM");
   const year = format(currentMonth, "yyyy");
@@ -41,7 +43,7 @@ export function MonthHeader({ currentMonth, onPrev, onNext }: MonthHeaderProps) 
         key={`${monthName}-${year}`}
         initial={{ opacity: 0, y: -8 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+        transition={{ duration: 0.3, ease: EASE }}
         className="text-center select-none"
       >
         <h2

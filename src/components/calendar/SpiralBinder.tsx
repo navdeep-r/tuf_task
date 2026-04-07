@@ -13,6 +13,8 @@ interface SpiralBinderProps {
   ringCount?: number;
 }
 
+const EASE: [number, number, number, number] = [0.22, 1, 0.36, 1];
+
 const ringVariants = {
   hidden: {
     scaleY: 0,
@@ -24,7 +26,7 @@ const ringVariants = {
     transition: {
       delay: 0.4 + i * 0.04, // staggered after hero drops
       duration: 0.3,
-      ease: [0.22, 1, 0.36, 1],
+      ease: EASE,
     },
   }),
 };
